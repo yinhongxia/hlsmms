@@ -4,7 +4,10 @@
     <div id="leftTitle">
       <h2>华联超市管理系统</h2>
       <p>您好,admin</p>
-      <p><router-link to="/">管理首页</router-link> | 退出系统</p>
+      <p>
+        <router-link to="/">管理首页</router-link>|
+        <a @click="loginOut()">退出系统</a>
+      </p>
     </div>
     <!-- 左侧菜单 -->
     <el-menu
@@ -14,14 +17,17 @@
       @close="handleClose"
       :unique-opened="true"
     >
-
       <!-- 第1个菜单：分类管理 -->
       <el-submenu index="1">
         <template slot="title">
           <span>分类管理</span>
         </template>
-        <el-menu-item index="sortmanagement"><router-link to="/sortmanagement">分类管理</router-link></el-menu-item>
-        <el-menu-item index="/addcategory"><router-link to="/addcategory">添加分类</router-link></el-menu-item>
+        <el-menu-item index="sortmanagement">
+          <router-link to="/sortmanagement">分类管理</router-link>
+        </el-menu-item>
+        <el-menu-item index="/addcategory">
+          <router-link to="/addcategory">添加分类</router-link>
+        </el-menu-item>
       </el-submenu>
 
       <!-- 第2个菜单：商品管理 -->
@@ -29,8 +35,8 @@
         <template slot="title">
           <span>商品管理</span>
         </template>
-        <el-menu-item index="2-1">商品管理</el-menu-item>
-        <el-menu-item index="2-2">添加商品</el-menu-item>
+        <el-menu-item index="goodslist"><router-link to="/goodslist">商品管理</router-link></el-menu-item>
+        <el-menu-item index="goodsadd"><router-link to="/goodsadd">添加商品</router-link></el-menu-item>
       </el-submenu>
 
       <!-- 第3个菜单：进货管理 -->
@@ -66,9 +72,15 @@
         <template slot="title">
           <span>账号管理</span>
         </template>
-        <el-menu-item index="/accManagement"><router-link to="/accManagement">账号管理</router-link></el-menu-item>
-        <el-menu-item index="/addAdmin"><router-link to="/addAdmin">添加账号</router-link></el-menu-item>
-        <el-menu-item index="/changepass"><router-link to="/changepass">密码修改</router-link></el-menu-item>
+        <el-menu-item index="/accManagement">
+          <router-link to="/accManagement">账号管理</router-link>
+        </el-menu-item>
+        <el-menu-item index="/addAdmin">
+          <router-link to="/addAdmin">添加账号</router-link>
+        </el-menu-item>
+        <el-menu-item index="/changepass">
+          <router-link to="/changepass">密码修改</router-link>
+        </el-menu-item>
       </el-submenu>
 
       <!-- 第7个菜单：会员管理 -->
@@ -77,7 +89,9 @@
           <span>会员管理</span>
         </template>
         <el-menu-item index="7-1">账号管理</el-menu-item>
-        <el-menu-item index="/AddAdmin"><router-link to="/AddAdmin">添加账号</router-link></el-menu-item>
+        <el-menu-item index="/AddAdmin">
+          <router-link to="/AddAdmin">添加账号</router-link>
+        </el-menu-item>
       </el-submenu>
 
       <!-- 第8个菜单：系统管理 -->
@@ -85,7 +99,9 @@
         <template slot="title">
           <span>系统管理</span>
         </template>
-        <el-menu-item index="/"><router-link to="/">系统信息</router-link></el-menu-item>
+        <el-menu-item index="/">
+          <router-link to="/">系统信息</router-link>
+        </el-menu-item>
         <el-menu-item index="8-2">系统配置</el-menu-item>
         <el-menu-item index="8-3">权限管理</el-menu-item>
         <el-menu-item index="8-4">添加管理组</el-menu-item>
@@ -101,6 +117,24 @@ export default {
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
+    },
+    // 退出系统方法
+    loginOut() {
+      // 发送请求到后端，执行清除cookie操作
+      this.axios.get("http://127.0.0.1:9990/users/loginout").then(result => {
+        console.log(result.data);
+        
+        if (result.data.isOk) {
+          this.$message({
+            message: "退出成功！ 欢迎下次登录!",
+            type: "success"
+          });
+          // 返回到登录页面
+          this.$router.push("/login");
+        }
+      }).catch(err=>{
+        console.log(err.message);
+      })
     }
   }
 };

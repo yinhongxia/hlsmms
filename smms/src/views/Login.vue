@@ -17,8 +17,8 @@
         <el-form-item label="账号" prop="username">
           <el-input type="text" v-model="ruleForm2.username" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="pass">
-          <el-input type="password" v-model="ruleForm2.pass" autocomplete="off"></el-input>
+        <el-form-item label="密码" prop="userpsw">
+          <el-input type="password" v-model="ruleForm2.userpsw" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm2')">登录</el-button>
@@ -34,7 +34,7 @@ export default {
     return {
       // 数据对象
       ruleForm2: {
-        pass: "",
+        userpsw: "",
         username: ""
       },
       // 验证规则
@@ -43,7 +43,7 @@ export default {
           { required: true, message: "账号不能为空", trigger: "blur" },
           { min: 3, max: 12, message: "长度在 6 到 12 个字符", trigger: "blur" }
         ],
-        pass: [
+        userpsw: [
           { required: true, message: "密码不能为空", trigger: "blur" },
           { min: 6, max: 18, message: "长度在 8 到 18 个字符", trigger: "blur" }
         ]
@@ -56,8 +56,31 @@ export default {
       // 调用组件的验证方法，提交表单时验证
       this.$refs[formName].validate(valid => {
         if (valid) {
-            // 使用路由对象的push实现跳转
-          this.$router.push("/");
+          // 让ajax携带cookie证书
+          this.axios.defaults.withCredentials = true;
+          // 完成表单验证后直接发起ajax请求到后端
+          this.axios
+            .post(
+              "http://127.0.0.1:9990/users/checkLogin",
+              this.qs.stringify(this.ruleForm2)
+            )
+            .then(result => {
+              if (result.data.isOk) {
+                //登录成功
+                this.$message({
+                  message: "恭喜你，" + result.data.msg,
+                  type: "success"
+                });
+                // 使用路由对象的push实现跳转
+                this.$router.push("/");
+              } else {
+                //登录失败
+                this.$message.error(result.data.msg);
+              }
+            })
+            .catch(err => {
+              this.$message.error(err.message);
+            });
         } else {
           console.log("error submit!!");
           return false;
@@ -86,6 +109,9 @@ export default {
   right: 0;
   bottom: 0;
   margin: auto;
+}
+#login .el-input {
+  width: 80%;
 }
 </style>
 

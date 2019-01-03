@@ -43,6 +43,16 @@ export default new Router({
       path: '/addcategory',
       component: () => import(/* webpackChunkName: "addCategory" */ './views/AddCategory.vue')
     },
+      // 添加商品
+    {
+      path: '/goodsadd',
+      component: () => import(/* webpackChunkName: "goodsadd" */ './views/GoodsAdd.vue')
+    },
+    // 商品管理
+    {
+      path: '/goodslist',
+      component: () => import(/* webpackChunkName: "goodslist" */ './views/GoodsList.vue')
+    },
 
   ]
 })

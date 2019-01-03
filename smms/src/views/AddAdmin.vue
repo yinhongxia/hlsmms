@@ -68,7 +68,7 @@ export default {
       // 数据对象
       ruleForm2: {
         pass: "",
-        checkPsd: "",
+        checkPass: "",
         username: "",
         userGroup: ""
       },
@@ -104,9 +104,31 @@ export default {
       // 调用组件的验证方法，提交表单时验证
       this.$refs[formName].validate(valid => {
         if (valid) {
-          // 使用路由对象的push实现跳转
-          // this.$router.push("/");
-        } else {
+          // 发送ajax
+          this.axios
+            .post(
+              "http://127.0.0.1:9990/users/addAdmin",
+              this.qs.stringify(this.ruleForm2)
+            )
+            .then(result => {
+              console.log("服务器成功返回的信息", result);
+              // 根据返回的结果处理业务逻辑
+              if (result.data.isOk) {
+                this.$message({
+                  message: result.data.msg,
+                  type: "success"
+                });
+              } else {
+                this.$message.error(result.data.msg);
+              };
+              setTimeout(()=>{
+                this.$router.push('/AccManagement')
+              },100)
+            })
+            .catch(err => {
+              console.error("服务器失败返回的信息", err);
+            });
+        } else {  
           console.log("error submit!!");
           return false;
         }

@@ -130,6 +130,15 @@ a{
   border-color: #459300;
 } */
 
+/* dialog对话框 */
+.el-dialog{
+  width: 40%;
+}
+.el-dialog .el-input{
+  width:80%;
+}
+
+
 
 
 
